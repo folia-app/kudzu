@@ -1,5 +1,5 @@
-var Sample = require('./build/contracts/Sample.json')
+var Kudzu = require('./build/contracts/Kudzu.json')
 
 module.exports = {
-  Sample: Sample
+  Kudzu: Kudzu
 }
