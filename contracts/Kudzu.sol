@@ -1,8 +1,8 @@
 pragma solidity ^0.6.8;
 
-import "./Metadata.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Metadata.sol";
 
 /**
  * The FoliaVirus contract does this and that and doesn't stop.

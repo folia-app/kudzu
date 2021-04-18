@@ -1,109 +1,3 @@
-// File: contracts/helpers/strings.sol
-
-/*
- * @title String & slice utility library for Solidity contracts.
- * @author Nick Johnson <arachnid@notdot.net>
- */
-
-pragma solidity ^0.6.8;
-
-library strings {
-    struct slice {
-        uint _len;
-        uint _ptr;
-    }
-
-    function memcpy(uint dest, uint src, uint len) private pure {
-        // Copy word-length chunks while possible
-        for (; len >= 32; len -= 32) {
-            assembly {
-                mstore(dest, mload(src))
-            }
-            dest += 32;
-            src += 32;
-        }
-
-        // Copy remaining bytes
-        uint mask = 256 ** (32 - len) - 1;
-        assembly {
-            let srcpart := and(mload(src), not(mask))
-            let destpart := and(mload(dest), mask)
-            mstore(dest, or(destpart, srcpart))
-        }
-    }
-
-    /*
-     * @dev Returns a slice containing the entire string.
-     * @param self The string to make a slice from.
-     * @return A newly allocated slice containing the entire string.
-     */
-    function toSlice(string memory self) internal pure returns (slice memory) {
-        uint ptr;
-        assembly {
-            ptr := add(self, 0x20)
-        }
-        return slice(bytes(self).length, ptr);
-    }
-
-    /*
-     * @dev Returns a newly allocated string containing the concatenation of
-     *      `self` and `other`.
-     * @param self The first slice to concatenate.
-     * @param other The second slice to concatenate.
-     * @return The concatenation of the two strings.
-     */
-    function concat(slice memory self, slice memory other) internal pure returns (string memory) {
-        string memory ret = new string(self._len + other._len);
-        uint retptr;
-        assembly {
-            retptr := add(ret, 32)
-        }
-        memcpy(retptr, self._ptr, self._len);
-        memcpy(retptr + self._len, other._ptr, other._len);
-        return ret;
-    }
-}
-
-// File: contracts/Metadata.sol
-
-pragma solidity ^0.6.8;
-
-/**
-* Metadata contract is upgradeable and returns metadata about Token
-*/
-
-
-contract Metadata {
-    using strings for *;
-
-    function tokenURI(uint _tokenId) public pure returns (string memory _infoUrl) {
-        string memory base = "https://virus.folia.app/v1/metadata/";
-        string memory id = uint2str(_tokenId);
-        return base.toSlice().concat(id.toSlice());
-    }
-    function uint2str(uint i) internal pure returns (string memory) {
-        if (i == 0) return "0";
-        uint j = i;
-        uint length;
-        while (j != 0) {
-            length++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(length);
-        uint k = length - 1;
-        while (i != 0) {
-            uint _uint = 48 + i % 10;
-            bstr[k--] = toBytes(_uint)[31];
-            i /= 10;
-        }
-        return string(bstr);
-    }
-    function toBytes(uint256 x) public pure returns (bytes memory b) {
-        b = new bytes(32);
-        assembly { mstore(add(b, 32), x) }
-    }
-}
-
 // File: @openzeppelin/contracts/utils/Context.sol
 
 // SPDX-License-Identifier: MIT
@@ -1994,6 +1888,112 @@ abstract contract Ownable is Context {
     }
 }
 
+// File: contracts/helpers/strings.sol
+
+/*
+ * @title String & slice utility library for Solidity contracts.
+ * @author Nick Johnson <arachnid@notdot.net>
+ */
+
+pragma solidity ^0.6.8;
+
+library strings {
+    struct slice {
+        uint _len;
+        uint _ptr;
+    }
+
+    function memcpy(uint dest, uint src, uint len) private pure {
+        // Copy word-length chunks while possible
+        for (; len >= 32; len -= 32) {
+            assembly {
+                mstore(dest, mload(src))
+            }
+            dest += 32;
+            src += 32;
+        }
+
+        // Copy remaining bytes
+        uint mask = 256 ** (32 - len) - 1;
+        assembly {
+            let srcpart := and(mload(src), not(mask))
+            let destpart := and(mload(dest), mask)
+            mstore(dest, or(destpart, srcpart))
+        }
+    }
+
+    /*
+     * @dev Returns a slice containing the entire string.
+     * @param self The string to make a slice from.
+     * @return A newly allocated slice containing the entire string.
+     */
+    function toSlice(string memory self) internal pure returns (slice memory) {
+        uint ptr;
+        assembly {
+            ptr := add(self, 0x20)
+        }
+        return slice(bytes(self).length, ptr);
+    }
+
+    /*
+     * @dev Returns a newly allocated string containing the concatenation of
+     *      `self` and `other`.
+     * @param self The first slice to concatenate.
+     * @param other The second slice to concatenate.
+     * @return The concatenation of the two strings.
+     */
+    function concat(slice memory self, slice memory other) internal pure returns (string memory) {
+        string memory ret = new string(self._len + other._len);
+        uint retptr;
+        assembly {
+            retptr := add(ret, 32)
+        }
+        memcpy(retptr, self._ptr, self._len);
+        memcpy(retptr + self._len, other._ptr, other._len);
+        return ret;
+    }
+}
+
+// File: contracts/Metadata.sol
+
+pragma solidity ^0.6.8;
+
+/**
+* Metadata contract is upgradeable and returns metadata about Token
+*/
+
+
+contract Metadata {
+    using strings for *;
+
+    function tokenURI(uint _tokenId) public pure returns (string memory _infoUrl) {
+        string memory base = "https://virus.folia.app/metadata/";
+        string memory id = uint2str(_tokenId);
+        return base.toSlice().concat(id.toSlice());
+    }
+    function uint2str(uint i) internal pure returns (string memory) {
+        if (i == 0) return "0";
+        uint j = i;
+        uint length;
+        while (j != 0) {
+            length++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(length);
+        uint k = length - 1;
+        while (i != 0) {
+            uint _uint = 48 + i % 10;
+            bstr[k--] = toBytes(_uint)[31];
+            i /= 10;
+        }
+        return string(bstr);
+    }
+    function toBytes(uint256 x) public pure returns (bytes memory b) {
+        b = new bytes(32);
+        assembly { mstore(add(b, 32), x) }
+    }
+}
+
 // File: contracts/Kudzu.sol
 
 pragma solidity ^0.6.8;
@@ -2009,16 +2009,40 @@ contract Kudzu is ERC721, Ownable {
     Metadata public metadata;
     constructor(Metadata _metadata) public ERC721("FoliaVirus", "FLV") {
         metadata = _metadata;
-        _mint(msg.sender, 1);
+        uint256 tokenId = 1;
+
+        tokenId = tokenId << 8;
+        tokenId = tokenId | pseudoRNG(32);
+
+        tokenId = tokenId << 8;
+        tokenId = tokenId | pseudoRNG(32);
+
+        _mint(msg.sender, tokenId);
     }
     function updateMetadata(Metadata _metadata) public onlyOwner {
         metadata = _metadata;
     }
-    function transferFrom(address from, address to, uint256 tokenId) public virtual override {
+    function transferFrom(address from, address to, uint256 parentId) public virtual override {
         require(balanceOf(from) == 1, "NOT YET INFECTED");
         require(balanceOf(to) == 0, "ALREADY INFECTED");
-        _mint(to, totalSupply() + 1);
+        uint256 tokenId = totalSupply() + 1;
+        tokenId = tokenId << 4;
+        if (pseudoRNG(2) == 0) {
+            //inherit eyes
+            tokenId = tokenId | (parentId >> 4 & 0xFF);
+            tokenId = tokenId << 8;
+            tokenId = tokenId | pseudoRNG(32);
+        } else {
+            //inherit mouth
+            tokenId = tokenId | pseudoRNG(32);
+            tokenId = tokenId << 8;
+            tokenId = tokenId | (parentId & 0xFF);
+        }
+        _mint(to, tokenId);
     }
     function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {}
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {}
+    function pseudoRNG(uint modulo) private view returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(block.difficulty, now))) % modulo;
+    }
 }

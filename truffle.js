@@ -6,6 +6,12 @@ module.exports = {
     solc: {
       version: "0.6.8",
       parser: "solcjs",
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 2000000
+        }
+      }
     }
   },
   networks: {
