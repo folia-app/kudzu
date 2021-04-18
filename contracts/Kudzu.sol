@@ -51,6 +51,10 @@ contract Kudzu is ERC721, Ownable {
         _mint(to, tokenId);
         emit Infect(from, to, tokenId);
     }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        return metadata.tokenURI(tokenId);
+    }
     function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {}
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {}
     function pseudoRNG(uint modulo, uint nonce) private view returns (uint256) {

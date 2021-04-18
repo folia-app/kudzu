@@ -41,7 +41,6 @@ contract('Kudzu', async function(accounts) {
   describe('Kudzu.sol', function() {
     it('should pass', async function() {
 
-
       for (var i = 0; i < 8; i++) {
         var tokenId = await kudzu.tokenByIndex(i)
         console.log({tokenId: tokenId.toString(10), tokenId16: tokenId.toString(16)})
