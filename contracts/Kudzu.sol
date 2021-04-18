@@ -13,7 +13,7 @@ contract Kudzu is ERC721, Ownable {
 
     event Infect(address indexed from, address indexed to, uint256 indexed tokenId);
 
-    constructor(Metadata _metadata) public ERC721("FoliaVirus", "FLV") {
+    constructor(Metadata _metadata, address genesis) public ERC721("FoliaVirus", "FLV") {
         metadata = _metadata;
         uint256 tokenId = 1;
 
@@ -22,8 +22,8 @@ contract Kudzu is ERC721, Ownable {
 
         tokenId = tokenId << 8;
         tokenId = tokenId | pseudoRNG(32, 2);
-        _mint(msg.sender, tokenId);
-        emit Infect(address(0), msg.sender, tokenId);
+        _mint(genesis, tokenId);
+        emit Infect(address(0), genesis, tokenId);
     }
     function getPiecesOfTokenID(uint256 tokenId) public pure returns(uint256 id, uint256 eyes, uint256 mouth) {
         return (tokenId >> 16, (tokenId >> 8 & 0xFF), tokenId & 0xFF);
@@ -31,10 +31,11 @@ contract Kudzu is ERC721, Ownable {
     function updateMetadata(Metadata _metadata) public onlyOwner {
         metadata = _metadata;
     }
-    function transferFrom(address from, address to, uint256 parentId) public virtual override {
+    function transferFrom(address from, address to, uint256 tokenId) public virtual override {
         require(balanceOf(from) == 1, "NOT YET INFECTED");
         require(balanceOf(to) == 0, "ALREADY INFECTED");
-        uint256 tokenId = totalSupply() + 1;
+        uint256 parentId = tokenId;
+        tokenId = totalSupply() + 1;
         tokenId = tokenId << 8;
         if (pseudoRNG(2, 1) == 0) {
             //inherit eyes
