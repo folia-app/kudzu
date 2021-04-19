@@ -45,11 +45,11 @@ module.exports = {
         return new HDWalletProvider(
           process.env.TESTNET_MNEMONIC,
           'https://mainnet.infura.io/v3/' + process.env.INFURA_API_KEY,
-          1
+          0
         )
       },
-      network_id: 1
-      // gas: 5561260
+      network_id: 1,
+      gasPrice: 180000000000, // 150 GWEI
     },
     kovan: {
       provider() {

@@ -13,7 +13,7 @@ contract Kudzu is ERC721, Ownable {
 
     event Infect(address indexed from, address indexed to, uint256 indexed tokenId);
 
-    constructor(Metadata _metadata, address genesis) public ERC721("FoliaVirus", "FLV") {
+    constructor(Metadata _metadata, address genesis) public ERC721("FoliaVirus", "☣️") {
         metadata = _metadata;
         uint256 tokenId = 1;
 
