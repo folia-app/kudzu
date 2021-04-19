@@ -1,4 +1,5 @@
 // File: @openzeppelin/contracts/utils/Context.sol
+// SPDX-License-Identifier: MIT
 
 
 pragma solidity >=0.6.0 <0.8.0;
@@ -1952,7 +1953,7 @@ pragma solidity ^0.6.8;
 contract Metadata {
     using strings for *;
 
-    function tokenURI(uint _tokenId) public pure returns (string memory _infoUrl) {
+    function tokenURI(uint256 _tokenId) public pure returns (string memory _infoUrl) {
         string memory base = "https://virus.folia.app/metadata/";
         string memory id = uint2str(_tokenId);
         return base.toSlice().concat(id.toSlice());
@@ -2033,6 +2034,10 @@ contract Kudzu is ERC721, Ownable {
         }
         _mint(to, tokenId);
         emit Infect(from, to, tokenId);
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        return metadata.tokenURI(tokenId);
     }
     function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {}
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {}

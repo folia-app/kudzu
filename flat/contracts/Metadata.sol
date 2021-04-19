@@ -76,7 +76,7 @@ pragma solidity ^0.6.8;
 contract Metadata {
     using strings for *;
 
-    function tokenURI(uint _tokenId) public pure returns (string memory _infoUrl) {
+    function tokenURI(uint256 _tokenId) public pure returns (string memory _infoUrl) {
         string memory base = "https://virus.folia.app/metadata/";
         string memory id = uint2str(_tokenId);
         return base.toSlice().concat(id.toSlice());
