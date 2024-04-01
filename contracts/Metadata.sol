@@ -10,7 +10,7 @@ contract Metadata {
     using strings for *;
 
     function tokenURI(uint256 _tokenId) public pure returns (string memory _infoUrl) {
-        string memory base = "https://virus.folia.app/metadata/";
+        string memory base = "https://virus.folia.app/metadata/base/";
         string memory id = uint2str(_tokenId);
         return base.toSlice().concat(id.toSlice());
     }

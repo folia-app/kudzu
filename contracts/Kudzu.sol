@@ -13,7 +13,7 @@ contract Kudzu is ERC721, Ownable {
 
     event Infect(address indexed from, address indexed to, uint256 indexed tokenId);
 
-    constructor(Metadata _metadata, address genesis) public ERC721("FoliaVirus", "☣️") {
+    constructor(Metadata _metadata, address genesis) public ERC721("Kudzu on Base", "KZB") {
         metadata = _metadata;
         uint256 tokenId = 1;
 
@@ -48,15 +48,20 @@ contract Kudzu is ERC721, Ownable {
             tokenId = tokenId << 8;
             tokenId = tokenId | (parentId & 0xFF);
         }
-        _mint(to, tokenId);
+        _mint(from, tokenId);
+        _transfer(from, to, tokenId);
         emit Infect(from, to, tokenId);
     }
 
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         return metadata.tokenURI(tokenId);
     }
-    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {}
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {}
+    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {
+      transferFrom(from, to, tokenId);
+    }
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {
+      transferFrom(from, to, tokenId);
+    }
     function pseudoRNG(uint modulo, uint nonce) private view returns (uint256) {
         return uint256(keccak256(abi.encodePacked(block.difficulty, now, totalSupply(), nonce))) % modulo;
     }

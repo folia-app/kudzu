@@ -1,5 +1,5 @@
-require('dotenv').config()
-const HDWalletProvider = require('truffle-hdwallet-provider')
+require("dotenv").config();
+const HDWalletProvider = require("truffle-hdwallet-provider");
 
 module.exports = {
   compilers: {
@@ -9,44 +9,44 @@ module.exports = {
       settings: {
         optimizer: {
           enabled: true,
-          runs: 2000000
-        }
-      }
-    }
+          runs: 2000000,
+        },
+      },
+    },
   },
   networks: {
     develop: {
       provider() {
         return new HDWalletProvider(
           process.env.TRUFFLE_MNEMONIC,
-          'http://localhost:9545/'
-        )
+          "http://localhost:9545/"
+        );
       },
-      host: 'localhost',
+      host: "localhost",
       port: 9545,
-      network_id: 4447
+      network_id: 4447,
     },
     ganache: {
       provider() {
         return new HDWalletProvider(
           process.env.GANACHE_MNEMONIC,
-          'http://localhost:7545'
-        )
+          "http://localhost:7545"
+        );
       },
-      host: 'localhost',
+      host: "localhost",
       port: 7545,
       network_id: 5777,
       gas: 10000000,
-      gasPrice: 1000000000
+      gasPrice: 1000000000,
     },
     mainnet: {
       provider() {
         // using wallet at index 1 ----------------------------------------------------------------------------------------v
         return new HDWalletProvider(
           process.env.TESTNET_MNEMONIC,
-          'https://mainnet.infura.io/v3/' + process.env.INFURA_API_KEY,
+          "https://mainnet.infura.io/v3/" + process.env.INFURA_API_KEY,
           0
-        )
+        );
       },
       network_id: 1,
       gasPrice: 180000000000, // 150 GWEI
@@ -56,53 +56,73 @@ module.exports = {
         // using wallet at index 1 ----------------------------------------------------------------------------------------v
         return new HDWalletProvider(
           process.env.TESTNET_MNEMONIC,
-          'https://kovan.infura.io/v3/' + process.env.INFURA_API_KEY,
+          "https://kovan.infura.io/v3/" + process.env.INFURA_API_KEY,
           1
-        )
+        );
       },
-      network_id: 42
+      network_id: 42,
       // gas: 5561260
     },
     rinkeby: {
       provider() {
         return new HDWalletProvider(
           process.env.TESTNET_MNEMONIC,
-          'https://rinkeby.infura.io/v3/' + process.env.INFURA_API_KEY
-        )
+          "https://rinkeby.infura.io/v3/" + process.env.INFURA_API_KEY
+        );
       },
       network_id: 4,
       // gas: 4700000,
-      gasPrice: 200000000000 // 200 GWEI
+      gasPrice: 200000000000, // 200 GWEI
     },
     ropsten: {
       provider() {
         return new HDWalletProvider(
           process.env.TESTNET_MNEMONIC,
-          'https://ropsten.infura.io/v3/' + process.env.INFURA_API_KEY
-        )
+          "https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY
+        );
       },
-      network_id: 2
+      network_id: 2,
+      // gas: 4700000
+    },
+    base: {
+      provider() {
+        return new HDWalletProvider(
+          process.env.TESTNET_MNEMONIC,
+          "https://mainnet.base.org"
+        );
+      },
+      network_id: 8453,
+      gasPrice: 1000000000, // 1 GWEI
+    },
+    baseSepolia: {
+      provider() {
+        return new HDWalletProvider(
+          process.env.TESTNET_MNEMONIC,
+          "https://sepolia.base.org"
+        );
+      },
+      network_id: 84532,
       // gas: 4700000
     },
     sokol: {
       provider() {
         return new HDWalletProvider(
           process.env.TESTNET_MNEMONIC,
-          'https://sokol.poa.network'
-        )
+          "https://sokol.poa.network"
+        );
       },
       gasPrice: 1000000000,
-      network_id: 77
+      network_id: 77,
     },
     poa: {
       provider() {
         return new HDWalletProvider(
           process.env.TESTNET_MNEMONIC,
-          'https://core.poa.network'
-        )
+          "https://core.poa.network"
+        );
       },
       gasPrice: 1000000000,
-      network_id: 99
-    }
-  }
-}
+      network_id: 99,
+    },
+  },
+};
