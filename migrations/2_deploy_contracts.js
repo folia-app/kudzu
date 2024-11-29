@@ -6,20 +6,16 @@ module.exports = (deployer, helper, accounts) => {
   deployer.then(async () => {
     try {
       // Deploy Metadata.sol
-      // await deployer.deploy(Metadata);
-      // let metadata = await Metadata.deployed();
-      // console.log(_ + "Metadata deployed at: " + metadata.address);
-      // await new Promise((resolve) => {
-      //   setTimeout(() => {
-      //     resolve();
-      //   }, 1000);
-      // });
+      await deployer.deploy(Metadata);
+      let metadata = await Metadata.deployed();
+      console.log(_ + "Metadata deployed at: " + metadata.address);
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 1000);
+      });
       // Deploy Kudzu.sol
-      await deployer.deploy(
-        Kudzu,
-        "0xa66044b5c42ca2bd7e542af3f62fea5c094c44ec",
-        billy
-      );
+      await deployer.deploy(Kudzu, metadata.address);
       let kudzu = await Kudzu.deployed();
       console.log(_ + "Kudzu deployed at: " + kudzu.address);
     } catch (error) {
